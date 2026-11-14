@@ -55,7 +55,10 @@ button{cursor:pointer}
 .winwrap{flex:1;min-height:0;overflow:auto}
 .window{height:100%;min-height:700px;min-width:1060px;display:flex;flex-direction:column;background:var(--surface);border:1px solid #D5DBE2;border-radius:12px;overflow:hidden;box-shadow:0 22px 60px rgba(26,33,41,.16);position:relative}
 .window:fullscreen{width:100vw;height:100vh;border-radius:0;border:0}
-.window.pfs{position:fixed;inset:0;z-index:200;border-radius:0;border:0;min-width:0}
+.window.pfs{position:fixed;inset:0;z-index:200;border-radius:0;border:0;min-width:0;height:auto;width:auto}
+.enl{position:absolute;right:16px;bottom:16px;z-index:55;width:42px;height:42px;border-radius:12px;border:0;background:rgba(26,33,41,.8);color:#fff;display:grid;place-items:center;opacity:.6;transition:opacity .15s,transform .15s}
+.enl:hover,.enl:focus-visible{opacity:1;transform:scale(1.07)}
+.enl .ic{width:20px;height:20px}
 .titlebar{display:flex;align-items:center;gap:12px;height:36px;padding-left:12px;background:#EDF0F3;border-bottom:1px solid var(--line);font-size:12px;color:var(--muted);flex:none}
 .titlebar .t{flex:1;color:var(--ink);font-weight:500;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sync{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:3px 8px;border-radius:7px;font-size:12px;font-weight:600;color:var(--ok)}
@@ -91,7 +94,7 @@ button{cursor:pointer}
 .clock{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .bellb{position:relative;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--muted)}
 .bellb i{position:absolute;top:-5px;right:-5px;background:var(--accent);color:#fff;font-style:normal;font-size:10px;font-weight:700;border-radius:9px;min-width:17px;line-height:17px;text-align:center}
-#view{flex:1;overflow:auto;padding:22px 26px 36px}
+#view{flex:1;overflow:auto;padding:22px 26px 80px}
 #view.enter{animation:fadein .16s ease-out}
 @keyframes fadein{from{opacity:.0}to{opacity:1}}
 .ph{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:18px}
@@ -111,7 +114,7 @@ button{cursor:pointer}
 .today>div{padding:16px 18px;border-left:1px solid var(--line)}
 .today>div:first-child{border-left:0}
 .today small{display:block;color:var(--muted);font-size:12px}
-.today .num{font-size:38px;font-weight:600;line-height:1.05;margin:3px 0 2px;display:block}
+.today .num{font-size:34px;font-weight:600;line-height:1.05;margin:3px 0 2px;display:block;white-space:nowrap}
 .today span.d{font-size:12px;font-weight:600}
 .chart{display:block;width:100%;height:auto}
 .chart text{font:11px var(--f-ui);fill:var(--muted)}
@@ -242,48 +245,26 @@ tbody tr.click:hover td{background:var(--wash)}
 @media (max-width:760px){.pagebar h1{font-size:24px}}
 </style>
 
+
+
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
-<symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></symbol>
-<symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v8"/></symbol>
-<symbol id="i-truck" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></symbol>
-<symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3zM9 8h6M9 12h6"/></symbol>
-<symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 012-2h13v4M3 7v11a2 2 0 002 2h15V9H5a2 2 0 01-2-2zM16 14h2"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
-<symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-1a4 4 0 00-4-4H8a4 4 0 00-4 4v1"/><circle cx="10" cy="8" r="3.5"/><path d="M20 20v-1a4 4 0 00-3-3.8M16 4.2a3.5 3.5 0 010 6.6"/></symbol>
-<symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></symbol>
-<symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1112 0c0 6 2 7 2 7H4s2-1 2-7zM10 20a2 2 0 004 0"/></symbol>
-<symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2L12 3zM12 10v5M12 18h.01"/></symbol>
-<symbol id="i-tire" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21"/></symbol>
-<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
-<symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
-<symbol id="i-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L3 21l1.9-5.4A8 8 0 1121 12z"/></symbol>
-<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-<symbol id="i-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
-<symbol id="i-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></symbol>
-<symbol id="i-min" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></symbol>
-<symbol id="i-barcode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 5v14M8 5v14M12 5v14M16 5v14M20 5v14"/></symbol>
-<symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/></symbol>
-<symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
-</defs></svg>
-
 <div class="stage">
   <header class="pagebar">
     <div><h1>TireHouse desktop app</h1><p>Working demo with sample data. Nothing here is saved or sent anywhere.</p></div>
     <span class="sp"></span>
     <div class="as">Use it as <div class="seg" id="asSeg" role="group" aria-label="Use the demo as"></div></div>
     <button class="btn" data-act="reset" id="resetBtn">Reset demo</button>
-    <button class="btn pri" data-act="fs" id="fsBtn1"><svg class="ic"><use href="#i-expand"/></svg><span>Full screen</span></button>
+    <button class="btn pri" data-act="fs" id="fsBtn1"></button>
   </header>
   <div class="winwrap">
   <div class="window" id="win">
     <div class="titlebar">
       <span class="t" id="wtitle">TireHouse · Main counter</span>
       <button class="sync" id="sync" data-act="net" title="Click to simulate losing and regaining internet">Connected · synced</button>
-      <button class="tbtn" data-act="fs" id="fsBtn2" aria-label="Full screen" title="Full screen"><svg class="ic"><use href="#i-expand"/></svg></button>
-      <button class="tbtn" aria-label="Minimise" tabindex="-1"><svg class="ic"><use href="#i-min"/></svg></button>
-      <button class="tbtn x" aria-label="Close" tabindex="-1"><svg class="ic"><use href="#i-x"/></svg></button>
+      <button class="tbtn" data-act="fs" id="fsBtn2" aria-label="Full screen" title="Full screen"></button>
+      <button class="tbtn" aria-label="Minimise" tabindex="-1" data-ic="min"></button>
+      <button class="tbtn x" aria-label="Close" tabindex="-1" data-ic="x"></button>
     </div>
     <div class="app">
       <aside class="rail" id="rail"></aside>
@@ -292,6 +273,7 @@ tbody tr.click:hover td{background:var(--wash)}
         <main id="view"></main>
       </div>
     </div>
+    <button class="enl" data-act="fs" id="fsBtn3" aria-label="Full screen" title="Full screen (Esc to leave)"></button>
     <div class="toasts" id="toasts" aria-live="polite"></div>
     <div id="modal" hidden></div>
     <div id="drawer" hidden></div>
@@ -302,11 +284,13 @@ tbody tr.click:hover td{background:var(--wash)}
 <script>
 (function(){
 'use strict';
-var $=function(s,r){return (r||document).querySelector(s)};
+var ROOT=document;
+var $=function(s){return ROOT.querySelector(s)};
 var fmt=function(n){return Math.round(n).toLocaleString('en-US')};
 var rs=function(n){return 'Rs '+fmt(n)};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
-var ICON=function(n){return '<svg class="ic"><use href="#i-'+n+'"/></svg>'};
+var PATHS={"home":"<path d=\"M3 11l9-8 9 8M5 10v10h14V10\"/>","box":"<path d=\"M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v8\"/>","truck":"<path d=\"M3 7h11v9H3zM14 10h4l3 3v3h-7\"/><circle cx=\"7\" cy=\"18\" r=\"2\"/><circle cx=\"17\" cy=\"18\" r=\"2\"/>","receipt":"<path d=\"M6 3h12v18l-3-2-3 2-3-2-3 2V3zM9 8h6M9 12h6\"/>","wallet":"<path d=\"M3 7a2 2 0 012-2h13v4M3 7v11a2 2 0 002 2h15V9H5a2 2 0 01-2-2zM16 14h2\"/>","check":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M8 12l3 3 5-6\"/>","users":"<path d=\"M16 20v-1a4 4 0 00-4-4H8a4 4 0 00-4 4v1\"/><circle cx=\"10\" cy=\"8\" r=\"3.5\"/><path d=\"M20 20v-1a4 4 0 00-3-3.8M16 4.2a3.5 3.5 0 010 6.6\"/>","search":"<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M21 21l-5-5\"/>","bell":"<path d=\"M6 9a6 6 0 1112 0c0 6 2 7 2 7H4s2-1 2-7zM10 20a2 2 0 004 0\"/>","alert":"<path d=\"M12 3l10 18H2L12 3zM12 10v5M12 18h.01\"/>","tire":"<circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"3.5\"/><path d=\"M12 3v5.5M12 15.5V21M3 12h5.5M15.5 12H21\"/>","plus":"<path d=\"M12 5v14M5 12h14\"/>","list":"<path d=\"M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01\"/>","msg":"<path d=\"M21 12a8 8 0 01-11.6 7.1L3 21l1.9-5.4A8 8 0 1121 12z\"/>","x":"<path d=\"M6 6l12 12M18 6L6 18\"/>","expand":"<path d=\"M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5\"/>","compress":"<path d=\"M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5\"/>","min":"<path d=\"M5 12h14\"/>","barcode":"<path d=\"M4 5v14M8 5v14M12 5v14M16 5v14M20 5v14\"/>","printer":"<path d=\"M7 9V3h10v6M6 18H4v-7h16v7h-2M7 14h10v7H7z\"/>","phone":"<rect x=\"7\" y=\"2\" width=\"10\" height=\"20\" rx=\"2\"/><path d=\"M11 18h2\"/>"};
+var ICON=function(n){return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+PATHS[n]+'</svg>'};
 var T0=Date.now(),BASE=new Date(2026,10,14,10,42,0).getTime();
 var now=function(){return new Date(BASE+(Date.now()-T0))};
 var hm=function(d){return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
@@ -535,7 +519,7 @@ function viewHTML(){
   }
 }
 function render(){
-  var ae=document.activeElement,fid=ae&&ae.id,ss=null,se=null;
+  var ae=ROOT.activeElement,fid=ae&&ae.id,ss=null,se=null;
   if(ae&&typeof ae.selectionStart==='number'){try{ss=ae.selectionStart;se=ae.selectionEnd}catch(e){}}
   var v=$('#view'),sc=v.scrollTop;
   $('#rail').innerHTML=railHTML();$('#topbar').innerHTML=topHTML();v.innerHTML=viewHTML();v.scrollTop=sc;
@@ -543,7 +527,7 @@ function render(){
   var labs={dashboard:'Dashboard',billing:'Billing',invoices:'Invoices',stock:'Stock',grn:'Goods received',accounts:'Accounts',approvals:'Approvals',messages:'Messages',members:'Members'};
   $('#wtitle').textContent='TireHouse · Main counter · '+labs[S.nav];
   var seg='';S.members.forEach(function(m){seg+='<button data-act="as" data-v="'+m.id+'" aria-pressed="'+(S.user===m.id)+'">'+esc(m.name)+'</button>'});$('#asSeg').innerHTML=seg;
-  if(fid){var el=document.getElementById(fid);if(el&&el!==document.activeElement){el.focus();if(ss!=null&&el.setSelectionRange){try{el.setSelectionRange(ss,se)}catch(e){}}}}
+  if(fid){var el=ROOT.getElementById(fid);if(el&&el!==ROOT.activeElement){el.focus();if(ss!=null&&el.setSelectionRange){try{el.setSelectionRange(ss,se)}catch(e){}}}}
 }
 function go(v){S.nav=v;render();var el=$('#view');el.scrollTop=0;el.classList.remove('enter');void el.offsetWidth;el.classList.add('enter')}
 
@@ -727,14 +711,14 @@ function membersView(){
 function modal(html,wide){$('#modal').innerHTML='<div class="mback" data-act="closeModal"></div><div class="mbox'+(wide?' wide':'')+'" role="dialog" aria-modal="true">'+html+'</div>';$('#modal').hidden=false;var f=$('#modal input,#modal select');if(f)f.focus()}
 function closeModal(){$('#modal').hidden=true;$('#modal').innerHTML=''}
 function closeDrawer(){$('#drawer').hidden=true;$('#drawer').innerHTML=''}
-var val=function(id){var e=document.getElementById(id);return e?e.value:''};
+var val=function(id){var e=ROOT.getElementById(id);return e?e.value:''};
 var numv=function(id){var v=parseFloat(val(id));return isFinite(v)?v:0};
 
 /* ---------- actions ---------- */
 var A={
   go:function(t){closeDrawer();go(t.dataset.v)},
   as:function(t){S.user=t.dataset.v;var ok=navItems().some(function(x){return x.id===S.nav});if(!ok)S.nav='dashboard';S.cart=freshCart();closeModal();closeDrawer();render();toast(isMgr()?'You can approve, see costs and manage members.':'Menus and numbers now follow '+me().name+'\'s access.','ok','Using the app as '+me().name)},
-  reset:function(){S=seed();S.cart=sampleCart();T0=Date.now();closeModal();closeDrawer();$('#toasts').innerHTML='';render();toast('Sample data restored.','ok')},
+  reset:function(){fillIcons();S=seed();S.cart=sampleCart();T0=Date.now();closeModal();closeDrawer();$('#toasts').innerHTML='';render();toast('Sample data restored.','ok')},
   fs:function(){toggleFS()},
   net:function(){
     S.online=!S.online;
@@ -809,32 +793,34 @@ var CHG={
 };
 
 /* ---------- full screen ---------- */
-function isFS(){var w=$('#win');return document.fullscreenElement===w||w.classList.contains('pfs')}
-function syncFS(){var on=isFS();$('#fsBtn1').innerHTML=ICON(on?'compress':'expand')+'<span>'+(on?'Exit full screen':'Full screen')+'</span>';$('#fsBtn2').innerHTML=ICON(on?'compress':'expand');$('#fsBtn2').setAttribute('aria-label',on?'Exit full screen':'Full screen')}
+function isFS(){return !!document.fullscreenElement||$('#win').classList.contains('pfs')}
+function setPfs(on){$('#win').classList.toggle('pfs',on);document.documentElement.style.overflow=on?'hidden':''}
+function fillIcons(){[].forEach.call(ROOT.querySelectorAll('[data-ic]'),function(b){b.innerHTML=ICON(b.getAttribute('data-ic'))})}
+function syncFS(){var on=isFS(),ic=ICON(on?'compress':'expand'),lab=on?'Exit full screen':'Full screen';$('#fsBtn1').innerHTML=ic+'<span>'+lab+'</span>';['#fsBtn2','#fsBtn3'].forEach(function(s){var b=$(s);b.innerHTML=ic;b.setAttribute('aria-label',lab);b.title=lab+(on?' (Esc)':'')})}
 function toggleFS(){
   var w=$('#win');
-  if(isFS()){w.classList.remove('pfs');if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}syncFS();return}
+  if(isFS()){setPfs(false);if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}syncFS();return}
   var p;try{p=w.requestFullscreen?w.requestFullscreen():null}catch(e){p=null}
-  if(p&&p.then){p.then(syncFS,function(){w.classList.add('pfs');syncFS()})}else{w.classList.add('pfs');syncFS()}
+  if(p&&p.then){p.then(syncFS,function(){setPfs(true);syncFS()})}else{setPfs(true);syncFS()}
 }
 document.addEventListener('fullscreenchange',syncFS);
 
 /* ---------- wiring ---------- */
-document.addEventListener('click',function(e){
+ROOT.addEventListener('click',function(e){
   var t=e.target.closest('[data-act]');if(!t)return;
   var f=A[t.dataset.act];if(f){e.preventDefault();f(t,e)}
 });
-document.addEventListener('input',function(e){var t=e.target;if(t.dataset&&t.dataset.in&&INP[t.dataset.in])INP[t.dataset.in](t)});
-document.addEventListener('change',function(e){var t=e.target;if(t.dataset&&t.dataset.ch&&CHG[t.dataset.ch])CHG[t.dataset.ch](t)});
-document.addEventListener('keydown',function(e){
+ROOT.addEventListener('input',function(e){var t=e.target;if(t.dataset&&t.dataset.in&&INP[t.dataset.in])INP[t.dataset.in](t)});
+ROOT.addEventListener('change',function(e){var t=e.target;if(t.dataset&&t.dataset.ch&&CHG[t.dataset.ch])CHG[t.dataset.ch](t)});
+ROOT.addEventListener('keydown',function(e){
   var tag=(e.target.tagName||'').toLowerCase(),typing=tag==='input'||tag==='textarea'||tag==='select';
-  if(e.key==='Escape'){if(!$('#modal').hidden)closeModal();else if(!$('#drawer').hidden)closeDrawer();else if($('#win').classList.contains('pfs')){$('#win').classList.remove('pfs');syncFS()}return}
+  if(e.key==='Escape'){if(!$('#modal').hidden)closeModal();else if(!$('#drawer').hidden)closeDrawer();else if($('#win').classList.contains('pfs')){setPfs(false);syncFS()}return}
   if(e.key==='Enter'&&e.target.id==='gq'){S.stock.q=S.gq;go('stock');return}
   if(typing)return;
-  if(e.key==='/'){e.preventDefault();var q=document.getElementById('q')||document.getElementById('gq');if(q)q.focus()}
+  if(e.key==='/'){e.preventDefault();var q=ROOT.getElementById('q')||ROOT.getElementById('gq');if(q)q.focus()}
   if(e.key==='F2'&&can('sell')){e.preventDefault();go('billing')}
 });
-setInterval(function(){var tb=$('#topbar');if(tb&&!document.hidden&&!(document.activeElement&&document.activeElement.id==='gq'))tb.innerHTML=topHTML()},30000);
+setInterval(function(){var tb=$('#topbar');if(tb&&!document.hidden&&!(ROOT.activeElement&&ROOT.activeElement.id==='gq'))tb.innerHTML=topHTML()},30000);
 
 S=seed();S.cart=sampleCart();
 var h0=(location.hash||'').replace('#','');if(['dashboard','billing','invoices','stock','grn','accounts','approvals','messages','members'].indexOf(h0)>-1)S.nav=h0;
