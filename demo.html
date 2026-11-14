@@ -299,6 +299,7 @@ var DISC_LIMIT=5;
 var TYPE={tyre:{l:'Tyre',c:'#D9500A'},battery:{l:'Battery',c:'#2F5D9E'},oil:{l:'Oil',c:'#C98A0B'},service:{l:'Service',c:'#6B7785'}};
 var PERMS=[['sell','Sell and bill'],['disc','Discount up to 5%'],['pay','Take payments'],['grn','Receive goods'],['cost','See cost prices'],['adjust','Adjust stock'],['acct','See accounts']];
 var S;
+var LIS=[];function emit(){LIS.forEach(function(f){try{f()}catch(e){}})}
 
 /* ---------- seed ---------- */
 function seed(){
@@ -362,9 +363,9 @@ function seed(){
       {t:'09:55',to:'0714 556 778',kind:'Reminder',text:'TireHouse: Rs 390,000 is outstanding on your account. Please settle at your earliest.'}
     ],
     approvals:[
-      {id:'A1',type:'sale',title:'Discount 12% on INV-2086',by:'Nimal',t:'10:19',detail:'Customer B · invoice before discount Rs 89,500 · Nimal\'s limit is 5%',inv:'INV-2086',status:'pending'},
-      {id:'A2',type:'adjust',title:'Stock adjustment −2 · 185/65R15 Ridgeway Touring',by:'Kamal',t:'09:58',detail:'Reason: damaged in rack · photo attached',item:'t3',delta:-2,reason:'Damaged',status:'pending'},
-      {id:'A3',type:'sale',title:'Credit sale Rs 94,900 · Hill Taxi Service',by:'Nimal',t:'09:40',detail:'Over the customer\'s credit limit · INV-2085',inv:'INV-2085',status:'pending'},
+      {id:'A1',type:'sale',title:'Discount 12% on INV-2086',by:'Nimal',t:'10:19',detail:'Customer B · invoice before discount Rs 89,500 · Nimal\'s limit is 5%',inv:'INV-2086',exp:'11:04',status:'pending'},
+      {id:'A2',type:'adjust',title:'Stock adjustment −2 · 185/65R15 Ridgeway Touring',by:'Kamal',t:'09:58',detail:'Reason: damaged in rack · photo attached',item:'t3',delta:-2,reason:'Damaged',exp:null,status:'pending'},
+      {id:'A3',type:'sale',title:'Credit sale Rs 94,900 · Hill Taxi Service',by:'Nimal',t:'09:40',detail:'Over the customer\'s credit limit · INV-2085',inv:'INV-2085',exp:'11:10',status:'pending'},
       {id:'A0',type:'info',title:'Price override on INV-2082 · 18,000 → 15,500',by:'Nimal',t:'09:12',detail:'Approved from the Manager\'s phone · fingerprint',status:'approved'},
       {id:'A00',type:'info',title:'Stock adjustment −5 · 205/55R16 Ridgeway Sprint',by:'Kamal',t:'08:50',detail:'Rejected: no photo attached',status:'rejected'}
     ],apprSeq:3,
@@ -413,7 +414,7 @@ function pill(st){var m={paid:['ok','Paid'],credit:['info','On credit'],held:['w
 function ydayAt(m){var ys=[[480,0],[510,21000],[540,55000],[570,98000],[600,132000],[642,164500],[660,180000],[690,205000],[720,233000]];if(m<=480)return 0;for(var i=1;i<ys.length;i++){if(m<=ys[i][0]){var a=ys[i-1],b=ys[i];return a[1]+(b[1]-a[1])*(m-a[0])/(b[0]-a[0])}}return 233000}
 function addRecv(c,amt){c.buckets[0]+=amt}
 function payRecv(c,amt){var rem=amt;for(var i=3;i>=0&&rem>0;i--){var t=Math.min(c.buckets[i],rem);c.buckets[i]-=t;rem-=t}}
-function toast(text,kind,title){var el=document.createElement('div');el.className='toast '+(kind||'');var ic=kind==='push'?'phone':kind==='bad'?'alert':kind==='warn'?'alert':'check';el.innerHTML=ICON(ic)+'<div>'+(title?'<b>'+esc(title)+'</b>':'')+esc(text)+'</div>';$('#toasts').appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},4200)}
+function toast(text,kind,title){if(!$('#toasts'))return;var el=document.createElement('div');el.className='toast '+(kind||'');var ic=kind==='push'?'phone':kind==='bad'?'alert':kind==='warn'?'alert':'check';el.innerHTML=ICON(ic)+'<div>'+(title?'<b>'+esc(title)+'</b>':'')+esc(text)+'</div>';$('#toasts').appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},4200)}
 
 /* ---------- invoice engine ---------- */
 function stockShort(i){var out=[];i.lines.forEach(function(l){var it=item(l.id);if(it.stock!=null&&it.stock<l.qty)out.push(it.name)});return out}
@@ -438,8 +439,9 @@ function voidInvoice(i){
 }
 function applyAdjust(id,delta,reason){var it=item(id);it.stock=Math.max(0,it.stock+delta);moveAdd(id,'Adjustment · '+reason,delta);logAdd('stock','Stock adjusted '+(delta>0?'+':'')+delta+' · '+it.name+' · '+reason)}
 function newRequest(o){
-  S.apprSeq++;o.id='A'+S.apprSeq;o.t=hm(now());o.status='pending';S.approvals.unshift(o);
+  S.apprSeq++;o.id='A'+S.apprSeq;o.t=hm(now());o.status='pending';if(o.exp===undefined)o.exp=o.type==='adjust'?null:hm(new Date(now().getTime()+30*60000));S.approvals.unshift(o);
   logAdd('appr',o.by+' asked: '+o.title);
+  if(!S.online)smsAdd('0771 000 111','Approval code','TireHouse approval code 482 913 for '+o.title+'. Valid 30 min.');
   if(S.online)toast(o.title,'push','Sent to the Manager\'s phone');else toast('Saved on this PC. It goes to the Manager when the internet is back.','warn');
 }
 function decide(id,ok){
@@ -452,7 +454,7 @@ function decide(id,ok){
   }else{
     a.status='rejected';if(a.type==='sale'){var j=invByNo(a.inv);if(j)j.status='rejected'}toast(a.title,'warn','Rejected');
   }
-  a.by2='Manager';logAdd('appr',(ok?'Approved: ':'Rejected: ')+a.title);render();
+  a.by2='Manager';a.dt=hm(now());logAdd('appr',(ok?'Approved: ':'Rejected: ')+a.title);render();
 }
 
 /* ---------- cart ---------- */
@@ -519,6 +521,7 @@ function viewHTML(){
   }
 }
 function render(){
+  if(!$('#view')){emit();return}
   var ae=ROOT.activeElement,fid=ae&&ae.id,ss=null,se=null;
   if(ae&&typeof ae.selectionStart==='number'){try{ss=ae.selectionStart;se=ae.selectionEnd}catch(e){}}
   var v=$('#view'),sc=v.scrollTop;
@@ -528,7 +531,7 @@ function render(){
   $('#wtitle').textContent='TireHouse · Main counter · '+labs[S.nav];
   var seg='';S.members.forEach(function(m){seg+='<button data-act="as" data-v="'+m.id+'" aria-pressed="'+(S.user===m.id)+'">'+esc(m.name)+'</button>'});$('#asSeg').innerHTML=seg;
   if(fid){var el=ROOT.getElementById(fid);if(el&&el!==ROOT.activeElement){el.focus();if(ss!=null&&el.setSelectionRange){try{el.setSelectionRange(ss,se)}catch(e){}}}}
-}
+emit();}
 function go(v){S.nav=v;render();var el=$('#view');el.scrollTop=0;el.classList.remove('enter');void el.offsetWidth;el.classList.add('enter')}
 
 /* dashboard */
@@ -709,8 +712,8 @@ function membersView(){
 
 /* ---------- modals ---------- */
 function modal(html,wide){$('#modal').innerHTML='<div class="mback" data-act="closeModal"></div><div class="mbox'+(wide?' wide':'')+'" role="dialog" aria-modal="true">'+html+'</div>';$('#modal').hidden=false;var f=$('#modal input,#modal select');if(f)f.focus()}
-function closeModal(){$('#modal').hidden=true;$('#modal').innerHTML=''}
-function closeDrawer(){$('#drawer').hidden=true;$('#drawer').innerHTML=''}
+function closeModal(){var m=$('#modal');if(!m)return;m.hidden=true;m.innerHTML=''}
+function closeDrawer(){var m=$('#drawer');if(!m)return;m.hidden=true;m.innerHTML=''}
 var val=function(id){var e=ROOT.getElementById(id);return e?e.value:''};
 var numv=function(id){var v=parseFloat(val(id));return isFinite(v)?v:0};
 
@@ -718,7 +721,7 @@ var numv=function(id){var v=parseFloat(val(id));return isFinite(v)?v:0};
 var A={
   go:function(t){closeDrawer();go(t.dataset.v)},
   as:function(t){S.user=t.dataset.v;var ok=navItems().some(function(x){return x.id===S.nav});if(!ok)S.nav='dashboard';S.cart=freshCart();closeModal();closeDrawer();render();toast(isMgr()?'You can approve, see costs and manage members.':'Menus and numbers now follow '+me().name+'\'s access.','ok','Using the app as '+me().name)},
-  reset:function(){fillIcons();S=seed();S.cart=sampleCart();T0=Date.now();closeModal();closeDrawer();$('#toasts').innerHTML='';render();toast('Sample data restored.','ok')},
+  reset:function(){S=seed();S.cart=sampleCart();T0=Date.now();closeModal();closeDrawer();var tc=$('#toasts');if(tc)tc.innerHTML='';render();toast('Sample data restored.','ok')},
   fs:function(){toggleFS()},
   net:function(){
     S.online=!S.online;
@@ -796,7 +799,7 @@ var CHG={
 function isFS(){return !!document.fullscreenElement||$('#win').classList.contains('pfs')}
 function setPfs(on){$('#win').classList.toggle('pfs',on);document.documentElement.style.overflow=on?'hidden':''}
 function fillIcons(){[].forEach.call(ROOT.querySelectorAll('[data-ic]'),function(b){b.innerHTML=ICON(b.getAttribute('data-ic'))})}
-function syncFS(){var on=isFS(),ic=ICON(on?'compress':'expand'),lab=on?'Exit full screen':'Full screen';$('#fsBtn1').innerHTML=ic+'<span>'+lab+'</span>';['#fsBtn2','#fsBtn3'].forEach(function(s){var b=$(s);b.innerHTML=ic;b.setAttribute('aria-label',lab);b.title=lab+(on?' (Esc)':'')})}
+function syncFS(){if(!$('#fsBtn1'))return;var on=isFS(),ic=ICON(on?'compress':'expand'),lab=on?'Exit full screen':'Full screen';$('#fsBtn1').innerHTML=ic+'<span>'+lab+'</span>';['#fsBtn2','#fsBtn3'].forEach(function(s){var b=$(s);b.innerHTML=ic;b.setAttribute('aria-label',lab);b.title=lab+(on?' (Esc)':'')})}
 function toggleFS(){
   var w=$('#win');
   if(isFS()){setPfs(false);if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}syncFS();return}
@@ -813,6 +816,7 @@ ROOT.addEventListener('click',function(e){
 ROOT.addEventListener('input',function(e){var t=e.target;if(t.dataset&&t.dataset.in&&INP[t.dataset.in])INP[t.dataset.in](t)});
 ROOT.addEventListener('change',function(e){var t=e.target;if(t.dataset&&t.dataset.ch&&CHG[t.dataset.ch])CHG[t.dataset.ch](t)});
 ROOT.addEventListener('keydown',function(e){
+  if(!$('#win'))return;
   var tag=(e.target.tagName||'').toLowerCase(),typing=tag==='input'||tag==='textarea'||tag==='select';
   if(e.key==='Escape'){if(!$('#modal').hidden)closeModal();else if(!$('#drawer').hidden)closeDrawer();else if($('#win').classList.contains('pfs')){setPfs(false);syncFS()}return}
   if(e.key==='Enter'&&e.target.id==='gq'){S.stock.q=S.gq;go('stock');return}
@@ -822,7 +826,18 @@ ROOT.addEventListener('keydown',function(e){
 });
 setInterval(function(){var tb=$('#topbar');if(tb&&!document.hidden&&!(ROOT.activeElement&&ROOT.activeElement.id==='gq'))tb.innerHTML=topHTML()},30000);
 
-S=seed();S.cart=sampleCart();
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function stage(kind){
+  if(kind==='adjust'){var pool=S.items.filter(function(x){return x.type!=='service'&&x.stock>3});var it=pick(pool),d=-(1+Math.floor(Math.random()*2));newRequest({type:'adjust',title:'Stock adjustment '+d+' · '+it.name,by:'Kamal',detail:'Reason: damaged in rack · photo attached',item:it.id,delta:d,reason:'Damaged'});render();return}
+  var pool2=S.items.filter(function(x){return x.type!=='service'&&x.stock>=4&&x.price<30000}),a=pick(pool2);
+  var inv={no:'INV-'+(S.invSeq++),time:hm(now()),cust:'cB',veh:'CAB-4821',lines:[{id:a.id,qty:2,price:a.price},{id:'s1',qty:1,price:6000}],disc:0,method:'cash',status:'held',by:'Nimal'};
+  var title,detail;
+  if(kind==='credit'){inv.cust='cC';inv.veh='CBD-1190';inv.method='credit';inv.lines=[{id:'t5',qty:3,price:item('t5').price}];title='Credit sale '+rs(tot(inv))+' · '+cust('cC').name;detail='Over the customer\'s credit limit · '+inv.no}
+  else{inv.disc=8+Math.floor(Math.random()*8);title='Discount '+inv.disc+'% on '+inv.no;detail='Customer B · before discount '+rs(sub(inv))+' · Nimal\'s limit is 5%'}
+  S.invoices.unshift(inv);newRequest({type:'sale',title:title,by:'Nimal',detail:detail,inv:inv.no});render();
+}
+window.THD={S:function(){return S},fmt:fmt,rs:rs,esc:esc,hm:hm,mins:mins,now:now,item:item,cust:cust,sup:sup,sub:sub,dsc:dsc,tot:tot,counted:counted,summary:summary,cashNow:cashNow,bal:bal,ydayAt:ydayAt,invByNo:invByNo,decide:decide,stage:stage,sim:function(){A.sim()},net:function(){A.net()},reset:function(){A.reset()},onRender:function(f){LIS.push(f)},TYPE:TYPE,PATHS:PATHS};
+fillIcons();S=seed();S.cart=sampleCart();
 var h0=(location.hash||'').replace('#','');if(['dashboard','billing','invoices','stock','grn','accounts','approvals','messages','members'].indexOf(h0)>-1)S.nav=h0;
 render();syncFS();
 })();
