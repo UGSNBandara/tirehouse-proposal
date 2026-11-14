@@ -34,7 +34,7 @@ button{cursor:pointer}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 .up{color:var(--ok)}.dn{color:var(--bad)}.wn{color:var(--warn)}.muted{color:var(--muted)}
 
-.pwrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:40px;align-items:start;position:relative}
+.pwrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:76px;align-items:start;position:relative}
 .pwrap:fullscreen{background:#E9ECF0;display:grid;grid-template-columns:1fr;place-items:center}
 .pwrap.pfs{position:fixed;inset:0;z-index:200;background:#E9ECF0;display:grid;grid-template-columns:1fr;place-items:center}
 .pwrap:fullscreen .pside,.pwrap.pfs .pside{display:none}
@@ -148,7 +148,7 @@ button{cursor:pointer}
 .sms small{display:block;color:var(--muted);margin-bottom:2px}
 .plock .unl{margin-top:auto}
 .ptoast{position:absolute;left:24px;right:24px;bottom:92px;z-index:60;background:var(--ink);color:#fff;border-radius:16px;padding:10px 14px;font-size:13px;text-align:center;animation:drop .2s ease-out}
-.enl{position:absolute;right:-6px;bottom:6px;z-index:5;width:42px;height:42px;border-radius:12px;border:0;background:rgba(26,33,41,.82);color:#fff;display:grid;place-items:center;opacity:.65;transition:opacity .15s,transform .15s}
+.enl{position:absolute;right:-58px;bottom:18px;z-index:5;width:42px;height:42px;border-radius:12px;border:0;background:rgba(26,33,41,.82);color:#fff;display:grid;place-items:center;opacity:.65;transition:opacity .15s,transform .15s}
 .enl:hover,.enl:focus-visible{opacity:1;transform:scale(1.07)}
 .pwrap:fullscreen .enl,.pwrap.pfs .enl{position:fixed;right:22px;bottom:22px}
 .pside{display:grid;gap:14px;align-content:start;max-width:520px}
@@ -160,7 +160,7 @@ button{cursor:pointer}
 .try .b small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .try .b .ic{color:var(--accent-d);width:22px;height:22px}
 .tip{background:var(--accent-soft);border-radius:14px;padding:12px 14px;font-size:13px;color:var(--accent-d)}
-@media (max-width:900px){.pwrap{grid-template-columns:1fr;justify-items:center}.pside{max-width:none;width:100%}}
+@media (max-width:900px){.pwrap{grid-template-columns:1fr;justify-items:center;gap:28px}.pside{max-width:none;width:100%}.enl{position:static;margin-top:14px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style><div class="pwrap" id="pwrap">
   <div class="pstage">
