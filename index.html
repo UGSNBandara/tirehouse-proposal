@@ -51,10 +51,12 @@ p{margin:0}
 .nav a{padding:7px 12px;font-size:14px;font-weight:500;text-decoration:none;color:var(--muted);border-radius:8px;white-space:nowrap}
 .nav a:hover{color:var(--accent-text);background:var(--accent-soft)}
 
-.intro{padding-block:52px 24px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end}
+.intro{padding-block:52px 24px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:center}
 .intro h1{font-size:clamp(44px,8vw,84px);text-transform:uppercase;margin:12px 0 16px}
 .intro h1 span{color:var(--accent)}
 .intro p.lead{font-size:18px;max-width:56ch;color:var(--muted)}
+.heroart{display:grid;place-items:center}
+.heroart svg{width:100%;max-width:460px;height:auto;display:block}
 .legend{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:12px;box-shadow:var(--shadow)}
 .legend div{display:flex;gap:12px;align-items:baseline;font-size:14px}
 .legend .mono{color:var(--accent-text);min-width:76px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-family:var(--f-mono)}
@@ -368,11 +370,34 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-si
     <h1>Pick a plan. <span>We host the backend.</span></h1>
     <p class="lead">Start with one web app for everything at Rs 100,000, or a Windows desktop app plus a Manager phone app from Rs 150,000. Two kinds of users, Manager and Staff. We host the backend on low-cost hosting, and SMS is billed by the number sent.</p>
   </div>
-  <div class="legend" aria-label="Plans at a glance">
-    <div><span class="mono">Roles</span><span>Manager and Staff only. The manager gives each staff member their own access.</span></div>
-    <div><span class="mono">Plan 1</span><span>Web app for everything, Rs 100,000.</span></div>
-    <div><span class="mono">Plan 2 / 3</span><span>Desktop app + Android Rs 150,000. Add iOS for Rs 200,000 in total.</span></div>
-    <div><span class="mono">Draft 3</span><span>All names, items and numbers on screen are samples.</span></div>
+  <div class="heroart" aria-hidden="true">
+    <svg viewBox="0 0 480 390" role="img" focusable="false">
+      <circle cx="250" cy="190" r="176" fill="#FFEDE2"/>
+      <ellipse cx="250" cy="342" rx="124" ry="10" fill="#1A2129" opacity=".08"/>
+      <g transform="translate(250 190)">
+        <circle r="142" fill="#27303A"/>
+        <circle r="132" fill="none" stroke="#3A4552" stroke-width="18" stroke-dasharray="16 9"/>
+        <circle r="112" fill="#1F2730"/>
+        <circle r="97" fill="#E9ECF0"/>
+        <circle r="92" fill="none" stroke="#D9500A" stroke-width="4"/>
+        <circle r="79" fill="#F7F8FA"/>
+        <g stroke="#CBD1D8" stroke-width="15" stroke-linecap="round"><line x1="0" y1="0" x2="0" y2="-66"/><line x1="0" y1="0" x2="62.8" y2="-20.4"/><line x1="0" y1="0" x2="38.8" y2="53.4"/><line x1="0" y1="0" x2="-38.8" y2="53.4"/><line x1="0" y1="0" x2="-62.8" y2="-20.4"/></g>
+        <circle r="22" fill="#D9500A"/><circle r="8" fill="#fff"/>
+      </g>
+      <g transform="translate(22 258) rotate(-6)">
+        <rect x="22" y="-11" width="24" height="13" rx="3" fill="#5F6B78"/><rect x="90" y="-11" width="24" height="13" rx="3" fill="#5F6B78"/>
+        <rect width="136" height="82" rx="12" fill="#fff" stroke="#D5DBE2" stroke-width="2"/>
+        <path d="M0 22V12a12 12 0 0112-12h112a12 12 0 0112 12v10z" fill="#D9500A"/>
+        <path d="M72 32L58 56h11l-4 18 19-27H73l5-15z" fill="#D9500A"/>
+      </g>
+      <g transform="translate(374 228) rotate(5)">
+        <path d="M58 16h20a8 8 0 018 8v8" fill="none" stroke="#5F6B78" stroke-width="5" stroke-linecap="round"/>
+        <rect x="28" y="6" width="30" height="26" rx="5" fill="#D9500A"/>
+        <rect y="28" width="86" height="112" rx="14" fill="#fff" stroke="#D5DBE2" stroke-width="2"/>
+        <path d="M43 60C43 60 29 78 29 89a14 14 0 0028 0C57 78 43 60 43 60z" fill="#D9500A"/>
+        <rect x="14" y="114" width="58" height="8" rx="4" fill="#EEF1F4"/>
+      </g>
+    </svg>
   </div>
 </div>
 
